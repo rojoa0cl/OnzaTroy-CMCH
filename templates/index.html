@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExcelQR Express Web — Imprenta & CSV</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Encabezado -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <h1>ExcelQR Express Web <span class="version-tag">v6.4.2</span></h1>
+          <p class="subtitle">Conversor TIFF sin compresión para imprenta y generador masivo de CSV</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span id="hubStatusBadge" class="status-badge online"><i class="fa-solid fa-circle-check"></i> En Línea (5055)</span>
+        <a href="https://github.com/rojoa0cl/ExcelQr_Express_Web" target="_blank" class="btn-github" title="Ver en GitHub">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      </div>
+    </header>
+
+    <!-- Barra de Folios Global (Memoria Compartida) -->
+    <section class="folio-global-card">
+      <div class="folio-header">
+        <div class="folio-title">
+          <i class="fa-solid fa-calculator"></i>
+          <span>Rango de Folios Compartido</span>
+          <span class="badge-memory" title="Los folios se recuerdan automáticamente para todas las operaciones"><i class="fa-solid fa-memory"></i> Memoria activa</span>
+        </div>
+        <button type="button" class="btn-secondary-sm" id="btnSyncFolios">
+          <i class="fa-solid fa-rotate"></i> Sincronizar
+        </button>
+      </div>
+      <div class="folio-inputs-grid">
+        <div class="input-group">
+          <label for="globalFolioInicial">Folio Inicial:</label>
+          <input type="number" id="globalFolioInicial" placeholder="Ej: 1000" min="0">
+        </div>
+        <div class="input-group">
+          <label for="globalFolioFinal">Folio Final:</label>
+          <input type="number" id="globalFolioFinal" placeholder="Ej: 1999" min="0">
+        </div>
+        <div class="input-group folio-summary-group">
+          <label>Total de Códigos Calculados:</label>
+          <div class="folio-counter-pill" id="globalTotalCalculado">0 códigos</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pestañas de Navegación -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-csv">
+        <i class="fa-solid fa-file-csv"></i> Códigos CSV (ScanTrust / Ricoh / CC)
+      </button>
+      <button class="tab-btn" data-tab="tab-images">
+        <i class="fa-solid fa-images"></i> Procesamiento de Imágenes (TIFF)
+      </button>
+      <button class="tab-btn" data-tab="tab-help">
+        <i class="fa-solid fa-book-open"></i> Instructivo & Guía
+      </button>
+    </nav>
+
+    <!-- Contenido Pestañas -->
+    <main class="tabs-content">
+
+      <!-- PESTAÑA 1: CÓDIGOS CSV -->
+      <section id="tab-csv" class="tab-pane active">
+        <div class="csv-cards-grid">
+
+          <!-- Card 1: ScanTrust -->
+          <div class="card operation-card">
+            <div class="card-badge">Delimitador: Punto y coma ( ; )</div>
+            <div class="card-icon"><i class="fa-solid fa-link"></i></div>
+            <h3>ScanTrust</h3>
+            <p class="card-desc">Genera <strong>code [ScanTrust].csv</strong> a partir del archivo <code>code.csv</code>.</p>
+            
+            <div class="dropzone" id="dropzoneScanTrust">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Arrastra tu <strong>code.csv</strong> aquí o haz clic</p>
+              <input type="file" id="fileScanTrust" accept=".csv" class="file-input-hidden">
+            </div>
+
+            <div class="file-info-bar" id="infoScanTrust" style="display: none;">
+              <span class="file-name"><i class="fa-solid fa-file"></i> <span class="name-text"></span></span>
+              <span class="file-count"><span class="count-text">0</span> registros</span>
+            </div>
+
+            <button class="btn-action" id="btnProcessScanTrust" disabled>
+              <i class="fa-solid fa-gear"></i> Generar code [ScanTrust].csv
+            </button>
+          </div>
+
+          <!-- Card 2: Ricoh -->
+          <div class="card operation-card">
+            <div class="card-badge">Delimitador: Punto y coma ( ; )</div>
+            <div class="card-icon"><i class="fa-solid fa-print"></i></div>
+            <h3>Ricoh</h3>
+            <p class="card-desc">Genera <strong>files [Ricoh].csv</strong> a partir de <code>files.csv</code>, forzando extensión <code>.tiff</code>.</p>
+            
+            <div class="dropzone" id="dropzoneRicoh">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Arrastra tu <strong>files.csv</strong> aquí o haz clic</p>
+              <input type="file" id="fileRicoh" accept=".csv" class="file-input-hidden">
+            </div>
+
+            <div class="file-info-bar" id="infoRicoh" style="display: none;">
+              <span class="file-name"><i class="fa-solid fa-file"></i> <span class="name-text"></span></span>
+              <span class="file-count"><span class="count-text">0</span> registros</span>
+            </div>
+
+            <button class="btn-action" id="btnProcessRicoh" disabled>
+              <i class="fa-solid fa-gear"></i> Generar files [Ricoh].csv
+            </button>
+          </div>
+
+          <!-- Card 3: Control de Calidad -->
+          <div class="card operation-card">
+            <div class="card-badge">Delimitador: Coma ( , )</div>
+            <div class="card-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+            <h3>Control de Calidad (CC)</h3>
+            <p class="card-desc">Genera <strong>code [CC].csv</strong> con enlace completo a partir de <code>code.csv</code>.</p>
+            
+            <div class="dropzone" id="dropzoneCC">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Arrastra tu <strong>code.csv</strong> aquí o haz clic</p>
+              <input type="file" id="fileCC" accept=".csv" class="file-input-hidden">
+            </div>
+
+            <div class="file-info-bar" id="infoCC" style="display: none;">
+              <span class="file-name"><i class="fa-solid fa-file"></i> <span class="name-text"></span></span>
+              <span class="file-count"><span class="count-text">0</span> registros</span>
+            </div>
+
+            <button class="btn-action" id="btnProcessCC" disabled>
+              <i class="fa-solid fa-gear"></i> Generar code [CC].csv
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PESTAÑA 2: IMÁGENES -->
+      <section id="tab-images" class="tab-pane">
+        <div class="images-container-grid">
+
+          <!-- Modo Web (Subida / ZIP) -->
+          <div class="card">
+            <div class="card-header-simple">
+              <i class="fa-solid fa-file-zipper"></i>
+              <h3>Modo Web: Subir Imágenes o Archivo ZIP</h3>
+            </div>
+            <p class="card-desc">
+              Sube imágenes individuales o un archivo comprimido <code>.zip</code>. El motor convertirá automáticamente cada imagen a <strong>formato TIFF sin compresión</strong> (RGB) y extensión estricta <code>.tiff</code>.
+            </p>
+
+            <div class="dropzone dropzone-large" id="dropzoneImages">
+              <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
+              <p>Arrastra aquí tus imágenes o archivo <strong>.zip</strong></p>
+              <small>Formatos admitidos: .zip, .jpg, .jpeg, .png, .bmp, .webp</small>
+              <input type="file" id="fileImages" multiple accept=".zip,.jpg,.jpeg,.png,.bmp,.webp" class="file-input-hidden">
+            </div>
+
+            <div class="file-info-bar" id="infoImages" style="display: none;">
+              <span class="file-name"><i class="fa-solid fa-layer-group"></i> <span id="imagesSelectedText">0 archivos seleccionados</span></span>
+            </div>
+
+            <button class="btn-action" id="btnProcessImagesUpload" disabled>
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Convertir a TIFF y Descargar ZIP
+            </button>
+          </div>
+
+          <!-- Modo Local (Directo en disco) -->
+          <div class="card">
+            <div class="card-header-simple">
+              <i class="fa-solid fa-folder-open"></i>
+              <h3>Modo Local: Procesar Carpeta en este Equipo</h3>
+            </div>
+            <p class="card-desc">
+              Si estás ejecutando la aplicación localmente en tu máquina, puedes ingresar directamente la ruta de la carpeta. Creará automáticamente la subcarpeta <code>_descomprimido</code> con los archivos <code>.tiff</code>.
+            </p>
+
+            <div class="input-group mb-4">
+              <label for="localFolderPath">Ruta completa de la carpeta origen:</label>
+              <div class="input-with-button">
+                <input type="text" id="localFolderPath" placeholder="Ej: C:\andres\imagenes_lote1">
+              </div>
+            </div>
+
+            <div class="local-notice">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Ideal para lotes masivos de miles de fotos sin necesidad de subirlos al navegador.</span>
+            </div>
+
+            <button class="btn-action btn-secondary" id="btnProcessImagesLocal">
+              <i class="fa-solid fa-folder-gear"></i> Procesar Carpeta en Disco
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PESTAÑA 3: INSTRUCTIVO & AYUDA -->
+      <section id="tab-help" class="tab-pane">
+        <div class="card help-card">
+          <h2><i class="fa-solid fa-circle-question"></i> Guía y Tutorial de Uso</h2>
+          
+          <div class="help-section">
+            <h4><i class="fa-solid fa-image"></i> 1. Procesamiento de Imágenes</h4>
+            <p>Las impresoras de producción e imprentas profesionales requieren archivos <strong>TIFF sin compresión (raw)</strong> para evitar pérdidas y fallos de RIP. Esta herramienta asegura:</p>
+            <ul>
+              <li>Conversión garantizada a espacio de color RGB.</li>
+              <li>Compresión en modo <code>None</code> (sin pérdida).</li>
+              <li>Extensión estrictamente formateada como <code>.tiff</code> (doble 'f') para compatibilidad total.</li>
+            </ul>
+          </div>
+
+          <div class="help-section">
+            <h4><i class="fa-solid fa-link"></i> 2. Códigos para ScanTrust</h4>
+            <p>Requiere el archivo <strong>code.csv</strong>. Mapea la columna <code>extended_id</code> y le asocia el folio correlativo consecutivo en la columna <code>serial_number</code>. El archivo resultante se delimita por punto y coma (<code>;</code>).</p>
+          </div>
+
+          <div class="help-section">
+            <h4><i class="fa-solid fa-print"></i> 3. Códigos para Ricoh</h4>
+            <p>Requiere el archivo <strong>files.csv</strong>. Extrae el nombre del archivo de la columna <code>image_file</code>, sustituye la extensión por <code>.tiff</code> y lo asocia al folio. Salida delimitada por punto y coma (<code>;</code>).</p>
+          </div>
+
+          <div class="help-section">
+            <h4><i class="fa-solid fa-clipboard-check"></i> 4. Códigos para Control de Calidad (CC)</h4>
+            <p>Requiere el archivo <strong>code.csv</strong>. Asocia <code>extended_id</code>, folio correlativo y la URL completa <code>full_url</code>. Salida delimitada por comas (<code>,</code>).</p>
+          </div>
+
+          <div class="easter-egg">
+            <p><em>Valar Morghulis</em></p>
+            <p><em>Valar Dohaeris</em></p>
+            <p><em>Que la fuerza lo acompañe joven padawan 🚀</em></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Barra de Notificaciones / Consola de Estado -->
+    <section class="console-card">
+      <div class="console-header">
+        <span><i class="fa-solid fa-terminal"></i> Registro de Estado y Mensajes del Sistema</span>
+        <button class="btn-clear-console" id="btnClearConsole"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+      </div>
+      <div class="console-body" id="consoleBody">
+        <div class="log-entry info">
+          <span class="log-time">[00:00:00]</span> Sistema listo. Selecciona una opción o arrastra tus archivos para comenzar.
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <span>ExcelQR Express Web &copy; 2026 — Diseñado para producción e imprenta</span>
+    </footer>
+
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
