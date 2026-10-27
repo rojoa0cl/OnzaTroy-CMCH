@@ -47,6 +47,18 @@ Abre tu navegador en: [http://localhost:5055](http://localhost:5055)
 
 ---
 
+## 📚 Documentación Técnica y Manuales
+
+Toda la documentación técnica y operativa del sistema está disponible en la carpeta [`docs/`](docs/):
+
+1. 📘 [Manual de Usuario y Operación](docs/01_MANUAL_DE_USUARIO.md)
+2. 🏗️ [Documento Técnico de Arquitectura y Diseño](docs/02_DOCUMENTO_TECNICO_ARQUITECTURA.md)
+3. 📐 [Especificación de Formatos de Imprenta y CSV](docs/03_ESPECIFICACION_FORMATOS_IMPRENTA_Y_CSV.md)
+4. 🛠️ [Guía de Despliegue y Mantenimiento](docs/04_GUIA_DESPLIEGUE_Y_MANTENIMIENTO.md)
+5. 📡 [Referencia Completa de la API RESTful](docs/05_REFERENCIA_API.md)
+
+---
+
 ## 🛠️ Tecnologías Utilizadas
 
 - **Backend:** Python 3, Flask
