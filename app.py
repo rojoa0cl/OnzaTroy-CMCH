@@ -360,5 +360,5 @@ def process_images_local():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5055))
-    print(f"⚡ ExcelQR Express Web iniciado en http://localhost:{port}")
+    print(f"[*] ExcelQR Express Web iniciado en http://localhost:{port}")
     app.run(host="0.0.0.0", port=port, debug=False)
