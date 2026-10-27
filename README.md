@@ -28,8 +28,8 @@ Aplicación web para el procesamiento de imágenes en formato TIFF de alta calid
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/rojoa0cl/3_Placa_B2C.git
-cd 3_Placa_B2C
+git clone https://github.com/rojoa0cl/OnzaTroy-CMCH.git
+cd OnzaTroy-CMCH
 ```
 
 ### 2. Instalar dependencias

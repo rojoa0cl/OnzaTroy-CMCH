@@ -17,7 +17,7 @@
 #### Paso 1: Clonar el Repositorio
 Abra una ventana de comandos en la carpeta donde residen las aplicaciones de producción (por ejemplo `C:\andres`):
 ```bash
-git clone https://github.com/rojoa0cl/3_Placa_B2C.git ExcelQr_Express_Web
+git clone https://github.com/rojoa0cl/OnzaTroy-CMCH.git ExcelQr_Express_Web
 cd ExcelQr_Express_Web
 ```
 
